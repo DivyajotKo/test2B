@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        input, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Your Dinner!</h1>
+    
+    <label for="name">Name:</label>
+    <input type="text" id="name" placeholder="Enter your full name">
+    <div id="nameError" class="error"></div>
+    
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" placeholder="Enter 6-digit phone number">
+    <div id="phoneError" class="error"></div>
+    
+    <h2>Select a time:</h2>
+    <select id="time">
+        <option value="5">5:00</option>
+        <option value="6">6:00</option>
+        <option value="7">7:00</option>
+        <option value="8">8:00</option>
+    </select>
+    
+    <h2>What would you like to have?</h2>
+    <label><input type="checkbox" name="meal" value="starters"> Starters</label>
+    <label><input type="checkbox" name="meal" value="main"> Main Course</label>
+    <label><input type="checkbox" name="meal" value="dessert"> Dessert</label>
+    <label><input type="checkbox" name="meal" value="drinks"> Drinks</label>
+    
+    <button onclick="submitForm()" id="submitBtn">Submit</button>
+    <div id="submitMessage"></div>
+
+    <script>
+        function checkName() {
+            var name = document.getElementById('name').value;
+            var nameError = document.getElementById('nameError');
+            
+            if (name === '') {
+                nameError.textContent = 'Please enter your name.';
+                return false;
+            } else if (!name.includes(' ')) {
+                nameError.textContent = 'Please enter your first and last name.';
+                return false;
+            } else {
+                nameError.textContent = '';
+                return true;
+            }
+        }
+
+        function checkPhone() {
+            var phone = document.getElementById('phone').value;
+            var phoneError = document.getElementById('phoneError');
+            
+            if (phone === '') {
+                phoneError.textContent = 'Please enter your phone number.';
+                return false;
+            } else if (phone.length !== 6 || isNaN(phone)) {
+                phoneError.textContent = 'Please enter a 6-digit phone number.';
+                return false;
+            } else {
+                phoneError.textContent = '';
+                return true;
+            }
+        }
+
+        function submitForm() {
+            if (checkName() && checkPhone()) {
+                var name = document.getElementById('name').value;
+                var time = document.getElementById('time').value;
+                var meals = Array.from(document.querySelectorAll('input[name="meal"]:checked'))
+                    .map(checkbox => checkbox.value);
+                
+                var message = "Booking confirmed for " + name + " at " + time + ":00.";
+                if (meals.length > 0) {
+                    message += " You've selected: " + meals.join(', ') + ".";
+                }
+                
+                document.getElementById('submitMessage').textContent = message;
+            } else {
+                document.getElementById('submitMessage').textContent = "Please fill out all fields correctly.";
+            }
+        }
+        document.getElementById('name').addEventListener('blur', checkName);
+        document.getElementById('phone').addEventListener('blur', checkPhone);
+    </script>
+</body>
+</html>
